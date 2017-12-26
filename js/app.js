@@ -6,37 +6,68 @@ var app = new Vue({
     sports: [
     	{name:'climbing'},
     	{name:'bike'},
-    	{name:'rugby'},
-    	{name:'bouldering'}
+    	{name:'rugby'}
     ],
     metrics: {
-    	'all': [
-    		{name:'nbSession'},
-    		{name:'sessionDuration'}
+    	'general': [
+    		{
+    			name:'sessionDuration',
+    			type:'number'
+    		},
+    		{
+    			name:'tirednessLevel',
+    			type:'number'
+    		}
     	],
     	'climbing': [
-    		{name:'nbSession'},
-    		{name:'sessionDuration'},
-    		{name:'maximumRate'}
+    		{
+    			name:'maximumRate',
+    			type:'text'
+    		}
     	],
     	'bike': [
-    		{name:'nbSession'},
-    		{name:'sessionDuration'},
-    		{name:'kmCount'}
+    		{
+    			name:'kmCount',
+    			type:'number'
+    		}
     	],
     	'rugby': [
-    		{name:'nbSession'},
-    		{name:'sessionDuration'},
-    		{name:'tackles'},
-    		{name:'tries'}
-    	],
-    	'bouldering': [
-    		{name:'nbSession'},
-    		{name:'sessionDuration'}
+    		{
+    			name:'tackles',
+    			type:'number'
+    		},
+    		{
+    			name:'tries',
+    			type:'number'
+    		}
     	]
     },
     newEntry: {
     	'sport': null
+    },
+    newSport: {
+    	'name': null,
+    	'metrics': []
+    }
+  },
+  methods: {
+    submitNewEntry: function () {
+    	console.log(JSON.stringify(this.newEntry));
+    	//TODO: Send newEntry to DB.
+    },
+    clearNewEntry: function () {
+    	for (var p in this.newEntry){
+    		this.newEntry[p]=null;
+    	}
+    },
+    submitNewSport: function () {
+    	console.log(JSON.stringify(this.newSport));
+    	//TODO: Send newSport to DB.
+    },
+    clearNewSport: function () {
+    	for (var p in this.newSport){
+    		this.newSport[p]=null;
+    	}
     }
   }
 })
