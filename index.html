@@ -50,8 +50,16 @@
                     Here you can find a summary of all your training sessions.
                 </p>
                 <div class="columns">
-                    <div class="column card" v-for="sport in sports">
+                    <button class="button" v-bind:class="{ 'is-primary': currentSport == 'all'}" v-on:click="currentSport='all'">
+                        All
+                    </button>
+                    <button class="button" v-for="sport in sports" v-bind:class="{'is-primary': currentSport==sport.name }" v-on:click="currentSport=sport.name">
                         {{sport.name}}
+                    </button>
+                </div>
+                <div class="columns">
+                    <div class="column card" v-for="kind in chartKinds">
+                        {{kind}}
                     </div>
                 </div>
             </div>
