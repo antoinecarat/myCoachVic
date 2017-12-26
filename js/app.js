@@ -9,11 +9,34 @@ var app = new Vue({
     	{name:'rugby'},
     	{name:'bouldering'}
     ],
-    chartKinds: [
-    	{name:'nbSession_total'},
-    	{name:'nbSession_monthAVG'},
-    	{name:'nbSession_weekAVG'},
-    	{name:'nbSession_totalAVG'}
-    ]
+    metrics: {
+    	'all': [
+    		{name:'nbSession'},
+    		{name:'sessionDuration'}
+    	],
+    	'climbing': [
+    		{name:'nbSession'},
+    		{name:'sessionDuration'},
+    		{name:'maximumRate'}
+    	],
+    	'bike': [
+    		{name:'nbSession'},
+    		{name:'sessionDuration'},
+    		{name:'kmCount'}
+    	],
+    	'rugby': [
+    		{name:'nbSession'},
+    		{name:'sessionDuration'},
+    		{name:'tackles'},
+    		{name:'tries'}
+    	],
+    	'bouldering': [
+    		{name:'nbSession'},
+    		{name:'sessionDuration'}
+    	]
+    },
+    newEntry: {
+    	'sport': null
+    }
   }
 })

@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
     <style type="text/css">
     .navbar .navbar-brand a.active{
         background-color: #f5f5f5;
@@ -50,16 +51,17 @@
                     Here you can find a summary of all your training sessions.
                 </p>
                 <div class="columns">
-                    <button class="button" v-bind:class="{ 'is-primary': currentSport == 'all'}" v-on:click="currentSport='all'">
+                    <button class="button" v-bind:class="{ 'is-info': currentSport == 'all'}" v-on:click="currentSport='all'">
                         All
                     </button>
-                    <button class="button" v-for="sport in sports" v-bind:class="{'is-primary': currentSport==sport.name }" v-on:click="currentSport=sport.name">
+                    <button class="button" v-for="sport in sports" v-bind:class="{'is-info': currentSport==sport.name }" v-on:click="currentSport=sport.name">
                         {{sport.name}}
                     </button>
                 </div>
                 <div class="columns">
-                    <div class="column card" v-for="kind in chartKinds">
-                        {{kind}}
+                    <div class="column card" v-for="metric in metrics[currentSport]">
+                        {{metric.name}}
+                        <canvas id="myChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -70,6 +72,34 @@
                 <p class="subtitle">
                     Select your sport, write down your performances.
                 </p>
+
+                <div class="field">
+                  <label class="label">Sport</label>
+                  <div class="control">
+                    <div class="select">
+                      <select v-model="newEntry['sport']">
+                        <option v-for="sport in sports">{{sport.name}}</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="field" v-for="metric in metrics[newEntry['sport']]">
+                    <label class="label">{{metric.name}}</label>
+                    <div class="control">
+                        <input class="input" type="number" placeholder="Enter a number" v-model="newEntry[metric.name]">
+                    </div>
+                </div>
+
+                <div class="field is-grouped">
+                  <div class="control">
+                    <button class="button is-link">Submit</button>
+                  </div>
+                  <div class="control">
+                    <button class="button is-text">Cancel</button>
+                  </div>
+                </div>
+
             </div>
             <div v-show="currentTab=='newSport'">    
                 <h1 class="title">
@@ -83,6 +113,45 @@
     </section>
 
     <script src="js/app.js"></script>
+    <script>
+    var ctx = document.getElementById("myChart").getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+            datasets: [{
+                label: '# of Votes',
+                data: [12, 19, 3, 5, 2, 3],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255,99,132,1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    </script>
 
 </body>
 </html>
