@@ -8,21 +8,73 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style type="text/css">
+    .navbar .navbar-brand a.active{
+        background-color: #f5f5f5;
+        border-top-style: solid;
+    }
+    </style>
 </head>
 <body>
     <section class="section">
         <div id="app" class="container">
-            <h1 class="title">
-                Hello! My name is Vic.
-            </h1>
-            <p class="subtitle">
-                I'll be you're personnal trainer.
-            </p>
+            <nav class="navbar">
+                <div class="navbar-brand">
+                    <a class="navbar-item" href="#" v-bind:class="{ active: currentTab=='home' }" v-on:click="currentTab='home'">
+                        MyCoachVic
+                    </a>
+                    <a class="navbar-item" href="#" v-bind:class="{ active: currentTab=='overview' }" v-on:click="currentTab='overview'">
+                        Overview
+                    </a>
+                    <a class="navbar-item" href="#" v-bind:class="{ active: currentTab=='newEntry' }" v-on:click="currentTab='newEntry'">
+                        New Entry
+                    </a>
+                    <a class="navbar-item" href="#" v-bind:class="{ active: currentTab=='newSport' }" v-on:click="currentTab='newSport'">
+                        New Sport
+                    </a>
+                </div>
+            </nav>
+            <div v-show="currentTab=='home'">    
+                <h1 class="title">
+                    Hello! My name is Vic.
+                </h1>
+                <p class="subtitle">
+                    I'm you're personnal trainer.
+                </p>
+            </div>
+            <div v-show="currentTab=='overview'">    
+                <h1 class="title">
+                    Overview
+                </h1>
+                <p class="subtitle">
+                    Here you can find a summary of all your training sessions.
+                </p>
+                <div class="columns">
+                    <div class="column card" v-for="sport in sports">
+                        {{sport.name}}
+                    </div>
+                </div>
+            </div>
+            <div v-show="currentTab=='newEntry'">    
+                <h1 class="title">
+                    New entry.
+                </h1>
+                <p class="subtitle">
+                    Select your sport, write down your performances.
+                </p>
+            </div>
+            <div v-show="currentTab=='newSport'">    
+                <h1 class="title">
+                    New sport.
+                </h1>
+                <p class="subtitle">
+                    Here you can add a new sport by describing its caracteristics. 
+                </p>
+            </div>
         </div>
     </section>
 
     <script src="js/app.js"></script>
-    <script src="js/filesaver.js"></script>
 
 </body>
 </html>
