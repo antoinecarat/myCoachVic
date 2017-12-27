@@ -127,6 +127,48 @@
                 <p class="subtitle">
                     Here you can add a new sport by describing its caracteristics. 
                 </p>
+                <div class="columns">
+                    <div class="column">
+                        <div class="field">
+                            <label class="label">Name</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="sport's name" v-model="newSport.name">
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column field">
+                                <label class="label">New metric's name</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="metric's name" v-model="newSport.current.name">
+                                </div>
+                            </div>
+                            <div class="column field">
+                                <label class="label">New metric's type</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="metric's type" v-model="newSport.current.type">
+                                </div>
+                            </div>
+                            <div class="column">
+                                <button class="button is-link" v-on:click="addMetric">+</button>
+                                <button class="button is-text" v-on:click="clearMetric">clear</button>
+                            </div>
+
+                        </div>
+
+                        <div class="field is-grouped">
+                            <div class="control">
+                                <button class="button is-link" v-on:click="submitNewSport()">Submit</button>
+                            </div>
+                            <div class="control">
+                                <button class="button is-text" v-on:click="clearNewSport()">Cancel</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column">
+                        Metrics:
+                        <div class="tag" v-for="metric in newSport.metrics">{{metric.name}} : {{metric.type}}</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

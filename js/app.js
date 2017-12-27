@@ -47,6 +47,7 @@ var app = new Vue({
     },
     newSport: {
     	'name': null,
+    	'current':{name: null, type:null},
     	'metrics': []
     }
   },
@@ -60,14 +61,25 @@ var app = new Vue({
     		this.newEntry[p]=null;
     	}
     },
+    addMetric: function () {
+            this.newSport.metrics.push({
+            	name: this.newSport.current.name,
+            	type: this.newSport.current.type
+            });
+    },
+    clearMetric: function () {
+    	this.newSport.current.name=null;
+    	this.newSport.current.type=null;
+    },
     submitNewSport: function () {
     	console.log(JSON.stringify(this.newSport));
     	//TODO: Send newSport to DB.
     },
     clearNewSport: function () {
-    	for (var p in this.newSport){
-    		this.newSport[p]=null;
-    	}
+    	this.newSport.name=null;
+    	this.newSport.current.name=null;
+    	this.newSport.current.type=null;
+    	this.newSport.metrics=[];
     }
   }
 })
