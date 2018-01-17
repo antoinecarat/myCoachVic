@@ -54,7 +54,7 @@ var app = new Vue({
   methods: {
     submitNewEntry: function () {
     	console.log(JSON.stringify(this.newEntry));
-    	//TODO: Send newEntry to DB.
+			
     	this.clearNewEntry();
     },
     clearNewEntry: function () {

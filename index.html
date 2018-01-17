@@ -35,15 +35,19 @@
                     </a>
                 </div>
             </nav>
-            <div v-show="currentTab=='home'">    
+            <div v-show="currentTab=='home'">
                 <h1 class="title">
                     Hello! My name is Vic.
                 </h1>
                 <p class="subtitle">
                     I'm you're personnal trainer.
                 </p>
+								<div>
+									My profile.
+									<!-- TODO: Add current user, listUsers, ... -->
+								</div>
             </div>
-            <div v-show="currentTab=='overview'">    
+            <div v-show="currentTab=='overview'">
                 <h1 class="title">
                     Overview
                 </h1>
@@ -77,7 +81,7 @@
                     </div>
                 </div>
             </div>
-            <div v-show="currentTab=='newEntry'">    
+            <div v-show="currentTab=='newEntry'">
                 <h1 class="title">
                     New entry.
                 </h1>
@@ -120,12 +124,12 @@
                 </div>
 
             </div>
-            <div v-show="currentTab=='newSport'">    
+            <div v-show="currentTab=='newSport'">
                 <h1 class="title">
                     New sport.
                 </h1>
                 <p class="subtitle">
-                    Here you can add a new sport by describing its caracteristics. 
+                    Here you can add a new sport by describing its caracteristics.
                 </p>
                 <div class="columns">
                     <div class="column">
