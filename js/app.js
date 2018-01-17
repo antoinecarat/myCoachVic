@@ -2,7 +2,17 @@ var app = new Vue({
   el: '#app',
   data: {
     currentTab:'home',
-    currentSport: 'all',
+		currentUser: null,
+		typedName: "",
+		mockUser: {
+			name: "acarat",
+			age: 22,
+			size: 170,
+			weight: 64,
+			sports: ["bouldering", "bike", "rugby"],
+			admin: true
+		},
+		currentSport: 'all',
     sports: [
     	{name:'climbing'},
     	{name:'bike'},
@@ -52,9 +62,19 @@ var app = new Vue({
     }
   },
   methods: {
+		logIn: function() {
+			//TODO Get user on db with typedName (if exists)
+			this.currentUser=this.mockUser;
+		},
+		register: function() {
+			//TODO Create user on db with typedName (if not exists)
+		},
+		logOut: function() {
+			this.currentUser=null;
+		},
     submitNewEntry: function () {
     	console.log(JSON.stringify(this.newEntry));
-			
+
     	this.clearNewEntry();
     },
     clearNewEntry: function () {

@@ -1,6 +1,9 @@
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
+const bodyParser = require('body-parser');
+var multer = require('multer'); // v1.0.5
+var upload = multer(); // for parsing multipart/form-data
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -51,6 +54,10 @@ var Entry = mongoose.model('Entry', entrySchema);
 // 	else console.log(me);
 // });
 
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
+
 app.get('/listUsers', function (req, res) {
 	var query = User.find().
 	exec(function (err, users) {
@@ -68,12 +75,13 @@ app.get('/getUser/:name', function (req, res) {
 	});
 });
 
-app.post('/addUser', function (req, res) {
+app.post('/addUser', upload.array(), function (req, res) {
 	var p = req.params;
+	console.log(JSON.stringify(p));
 	var user = new User({name: p.name, age: p.age, size: p.size, weight: p.weight, sports: p.sports, admin: p.admin });
-	user.save(function (err, me) {
+	user.save(function (err, user) {
 		if (err) return console.error(err);
-		else res.send(user.name + "has been added.");
+		else res.send(user.name + " has been added.");
 	});
 });
 
