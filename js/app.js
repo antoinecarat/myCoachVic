@@ -12,12 +12,7 @@ var app = new Vue({
 			sports: ["bouldering", "bike", "rugby"],
 			admin: true
 		},
-		currentSport: 'all',
-    sports: [
-    	{name:'climbing'},
-    	{name:'bike'},
-    	{name:'rugby'}
-    ],
+		currentSport: null,
     metrics: {
     	'general': [
     		{
@@ -71,6 +66,9 @@ var app = new Vue({
 		},
 		logOut: function() {
 			this.currentUser=null;
+		},
+		setCurrentSport: function(sport) {
+			this.currentSport=sport;
 		},
     submitNewEntry: function () {
     	console.log(JSON.stringify(this.newEntry));
