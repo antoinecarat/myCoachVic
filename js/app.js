@@ -1,5 +1,16 @@
+//const home = {
+//	props: ['message'],
+//	template: '',
+//	methods: {
+//
+//	}
+//}
+
 var app = new Vue({
   el: '#app',
+	//components: {
+  //  'my-component': home
+  //},
   data: {
     currentTab:'home',
 		currentUser: null,
@@ -11,6 +22,18 @@ var app = new Vue({
 			weight: 64,
 			sports: ["bouldering", "bike", "rugby"],
 			admin: true
+		},
+		mockBalanceData: {
+			labels: ["bouldering", "bike", "rugby"],
+			series: [
+		  	[30, 20, 50]
+		  ]
+		},
+		mockChartOptions: {
+			donut: true,
+  		donutWidth: 20,
+  		startAngle: 270,
+  		total: 200
 		},
 		currentSport: null,
     metrics: {
@@ -47,6 +70,14 @@ var app = new Vue({
     		}
     	]
     },
+		newUser: {
+			name: null,
+			age: null,
+			size: null,
+			weight: null,
+			sports: [],
+			admin: false
+		},
     newEntry: {
     	'sport': null
     },
@@ -60,6 +91,11 @@ var app = new Vue({
 		logIn: function() {
 			//TODO Get user on db with typedName (if exists)
 			this.currentUser=this.mockUser;
+			Vue.nextTick(function() {
+				new Chartist.Bar('#nbSessionBalance', this.getSessionBalance(this.currentUser));
+				new Chartist.Bar('#timeSpentBalance', this.getTimeBalance(this.currentUser));
+				new Chartist.Bar('#tirednessLevelBalance', this.getTirednessBalance(this.currentUser));
+			}.bind(this));
 		},
 		register: function() {
 			//TODO Create user on db with typedName (if not exists)
@@ -67,8 +103,34 @@ var app = new Vue({
 		logOut: function() {
 			this.currentUser=null;
 		},
+		getNumberofSessions: function(user, sport) {
+			//TODO: Retrieve it from db regarding sport (if null -> all)
+			return 10;
+		},
+		getTimeSpent: function(user, sport) {
+			//TODO: Retrieve it from db regarding sport (if null -> all)
+			return 4.5;
+		},
+		getTirednessLevel: function(user, sport) {
+			//TODO: Retrieve it from db regarding sport.
+			return 5;
+		},
+		getSessionBalance: function(user) {
+			return this.mockBalanceData;
+		},
+		getTimeBalance: function(user) {
+			return this.mockBalanceData;
+		},
+		getTirednessBalance: function(user) {
+			return this.mockBalanceData;
+		},
 		setCurrentSport: function(sport) {
 			this.currentSport=sport;
+			/*Vue.nextTick(function() {
+				new Chartist.Bar('#nbSessionBalance', this.getSessionBalance(this.currentUser));
+				new Chartist.Bar('#timeSpentBalance', this.getTimeBalance(this.currentUser));
+				new Chartist.Bar('#tirednessLevelBalance', this.getTirednessBalance(this.currentUser));
+			}.bind(this));*/
 		},
     submitNewEntry: function () {
     	console.log(JSON.stringify(this.newEntry));

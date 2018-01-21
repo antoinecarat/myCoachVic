@@ -8,8 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.1/css/bulma.min.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.js"></script>
-    <style type="text/css">
+
+		<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
+    <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+
+		<style type="text/css">
     .navbar .navbar-brand a.active{
         background-color: #f5f5f5;
         border-top-style: solid;
@@ -19,8 +22,11 @@
 <body>
     <section class="section">
         <div id="app" class="container">
-            <nav class="navbar">
+            <nav class="navbar" v-show="currentUser!=null">
                 <div class="navbar-brand">
+										<a class="navbar-item" href="#" v-bind:class="{ active: currentTab=='admin' }" v-on:click="currentTab='admin'" v-show="currentUser!=null && currentUser.admin">
+											<i class="fa fa-cogs" aria-hidden="true"></i>
+										</a>
                     <a class="navbar-item" href="#" v-bind:class="{ active: currentTab=='home' }" v-on:click="currentTab='home'">
                         MyCoachVic
                     </a>
@@ -32,9 +38,6 @@
                     </a>
                     <a class="navbar-item" href="#" v-bind:class="{ active: currentTab=='newSport' }" v-on:click="currentTab='newSport'">
                         New Sport
-                    </a>
-										<a class="navbar-item" href="#" v-bind:class="{ active: currentTab=='admin' }" v-on:click="currentTab='admin'" v-show="currentUser!=null && currentUser.admin">
-                        Admin
                     </a>
                 </div>
             </nav>
@@ -77,7 +80,7 @@
 												<div class="tile">
 													<div class="tile is-parent">
 														<article class="tile is-child notification is-light">
-															<p class="title">X</p>
+															<p class="title"> {{getNumberofSessions(currentUser)}} </p>
 															<div class="content">
 																Sessions
 															</div>
@@ -85,7 +88,7 @@
 													</div>
 													<div class="tile is-parent">
 														<article class="tile is-child notification is-light">
-															<p class="title">X,XX</p>
+															<p class="title"> {{getTimeSpent(currentUser)}} </p>
 															<div class="content">
 																Hours spent working out
 															</div>
@@ -96,25 +99,22 @@
 													<div class="tile is-parent">
 										        <article class="tile is-child notification is-light">
 										          <p class="title">Number of session</p>
-										          <figure class="image is-4by3">
-										            <img src="https://bulma.io/images/placeholders/640x480.png">
-										          </figure>
+															<div class="ct-chart ct-perfect-fourth" id="nbSessionBalance">
+															</div>
 										        </article>
 										      </div>
 										      <div class="tile is-parent">
 										        <article class="tile is-child notification is-light">
 															<p class="title">Time spent</p>
-										          <figure class="image is-4by3">
-										            <img src="https://bulma.io/images/placeholders/640x480.png">
-										          </figure>
+															<div class="ct-chart ct-perfect-fourth" id="timeSpentBalance">
+															</div>
 										        </article>
 										      </div>
 													<div class="tile is-parent">
 														<article class="tile is-child notification is-light">
 															<p class="title">Tiredness level</p>
-															<figure class="image is-4by3">
-																<img src="https://bulma.io/images/placeholders/640x480.png">
-															</figure>
+															<div class="ct-chart ct-perfect-fourth" id="tirednessLevelBalance">
+															</div>
 														</article>
 													</div>
 										    </div>
@@ -146,7 +146,7 @@
 													<div class="tile">
 														<div class="tile is-parent">
 															<article class="tile is-child notification is-light">
-																<p class="title">X</p>
+																<p class="title"> {{getNumberofSessions(currentUser, currentSport)}} </p>
 																<div class="content">
 																	Sessions
 																</div>
@@ -154,7 +154,7 @@
 														</div>
 														<div class="tile is-parent">
 															<article class="tile is-child notification is-light">
-																<p class="title">X,XX</p>
+																<p class="title"> {{getTimeSpent(currentUser, currentSport)}} </p>
 																<div class="content">
 																	Hours spent working out
 																</div>
@@ -164,32 +164,28 @@
 													<div class="tile">
 														<div class="tile is-parent">
 											        <article class="tile is-child notification is-light">
-											          <p class="title">Number of session per week</p>
-											          <figure class="image is-4by3">
-											            <img src="https://bulma.io/images/placeholders/640x480.png">
-											          </figure>
+											          <p class="title">Number of session evolution</p>
+											          <div id="user-session-graph" class="image is-4by3">
+											          </div>
 											        </article>
 											      </div>
 											      <div class="tile is-parent">
 											        <article class="tile is-child notification is-light">
 																<p class="title">Time spent evolution</p>
-											          <figure class="image is-4by3">
-											            <img src="https://bulma.io/images/placeholders/640x480.png">
-											          </figure>
+																<div id="user-time-graph" class="image is-4by3">
+											          </div>
 											        </article>
 											      </div>
 														<div class="tile is-parent">
 															<article class="tile is-child notification is-light">
 																<p class="title">Tiredness level evolution</p>
-																<figure class="image is-4by3">
-																	<img src="https://bulma.io/images/placeholders/640x480.png">
-																</figure>
+																<div id="user-tiredness-graph" class="image is-4by3">
+											          </div>
 															</article>
 														</div>
 											    </div>
 											  </div>
 											</div>
-										</div>
 									</article>
 								</div>
 								<div v-else>
@@ -295,49 +291,18 @@
 									Please connect.
 								</div>
 						</div>
+						<div v-show="currentTab=='admin'">
+							<div class="tags">
+								<span class="tag">acarat
+									<a class="delete"></a>
+								</span>
+								<span class="tag">mcherr
+									<a class="delete"></a>
+								</span>
+						</div>
         </div>
     </section>
 
     <script src="js/app.js"></script>
-    <!-- <script>
-    var ctx = document.getElementById("myChart").getContext('2d');
-    var myChart = new Chart(ctx, {
-        type: 'bar',
-        data: {
-            labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
-            datasets: [{
-                label: '# of Votes',
-                data: [12, 19, 3, 5, 2, 3],
-                backgroundColor: [
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
-                ],
-                borderColor: [
-                    'rgba(255,99,132,1)',
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            scales: {
-                yAxes: [{
-                    ticks: {
-                        beginAtZero:true
-                    }
-                }]
-            }
-        }
-    });
-    </script> -->
-
 </body>
 </html>
