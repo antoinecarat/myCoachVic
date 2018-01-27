@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path')
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
@@ -57,6 +58,13 @@ var Entry = mongoose.model('Entry', entrySchema);
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
+app.get('/', function (req, res) {
+	res.sendFile('index.html', {root: path.join(__dirname, '/site')});
+});
+
+app.get('/app.js', function (req, res) {
+	res.sendFile('app.js', {root: path.join(__dirname, '/site/js')});
+});
 
 app.get('/listUsers', function (req, res) {
 	var query = User.find().
