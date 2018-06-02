@@ -9,7 +9,7 @@
         <p>Connect</p>
       </section>
       <footer class="modal-card-foot">
-        <button class="button" @click="$router.push('/overview')">Connect</button>
+        <button class="button" @click="connect()">Connect</button>
         <button class="button is-text" @click="$router.go(-1)">Cancel</button>
       </footer>
     </div>
@@ -18,7 +18,13 @@
 
 <script>
 export default {
-  name: 'Connect'
+  name: 'Connect',
+  methods: {
+    connect: function () {
+      this.$store.commit('connect', {name: 'acarat'})
+      this.$router.push('/overview')
+    }
+  }
 }
 </script>
 
