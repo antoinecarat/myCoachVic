@@ -10,15 +10,15 @@
           </h2>
         </div>
       </div>
-      <!-- Connect/Register -->
       <div class="is-grouped">
-        <button class="button">Connect</button>
-        <button class="button">Register</button>
+        <button class="button" @click="$router.push('/connect')">Connect</button>
+        <button class="button" @click="$router.push('/register')">Register</button>
       </div>
   </section>
 </template>
 
 <script>
+
 export default {
   name: 'HelloWorld'
 }
