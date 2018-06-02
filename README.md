@@ -1,2 +1,7 @@
-# myCoachVic
-Personnal project in order to better understand web apps development. This is a sport coach app. (Stack: Bulma+Vue+Node+MongoDB)
+# mycoachvic
+> A sport performances management web app (progressive soon)
+
+## stack
+- VueJS with buefy
+- NodeJS with express
+- Mongodb
