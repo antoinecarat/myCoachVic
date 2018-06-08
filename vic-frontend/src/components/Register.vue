@@ -10,11 +10,14 @@
         </h2>
       </div>
     </div>
-    <div class="is-grouped">
-      <input type="text" v-model="name"/>
-      <button class="button" @click="register()">Register</button>
-      <button class="button is-text" @click="$router.go(-1)">Cancel</button>
-    </div>
+    <div class="form">
+      <input type="text" class="input" :class="{'is-danger': pseudoAlreadyExists, 'is-loading': checkingPseudo}" v-model="name"/>
+      <p class="help is-danger" v-if="pseudoAlreadyExists">This username is already used: <a @click="$router.push('/connect')">Connect</a></p>
+      <div class="is-grouped">
+        <button class="button" @click="register()">Register</button>
+        <button class="button is-text" @click="$router.go(-1)">Cancel</button>
+      </div>
+  </div>
   </section>
 </template>
 
@@ -24,19 +27,27 @@ import axios from 'axios'
 export default {
   name: 'Register',
   data: () => {
-    return { name: 'pouet' }
+    return {
+      name: '',
+      pseudoAlreadyExists: false,
+      checkingPseudo: false
+   }
   },
   methods: {
     register: function () {
-      // Add new user in db
+      this.checkingPseudo = true
       axios.get("http://localhost:5000/getUser/" + this.name)
       .then( res => {
-        this.$store.commit('connect', res.data)
+        this.checkingPseudo = false
+        this.pseudoAlreadyExists = true
       })
       .catch( err => {
-        this.$store.commit('connect', { name: 'jdoe'} )
+        console.log(err)
+        this.checkingPseudo = false
+        //call /addUser to have a proper user
+        this.$store.commit('connect', { name: this.name} )
+        this.$router.push('/overview')
       })
-      this.$router.push('/overview')
     }
   }
 }
