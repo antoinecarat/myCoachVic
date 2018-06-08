@@ -5,6 +5,7 @@ import Overview from '@/components/Overview'
 import Connect from '@/components/Connect'
 import Register from '@/components/Register'
 import NewEntry from '@/components/NewEntry'
+import NotFoundComponent from '@/components/NotFoundComponent'
 
 Vue.use(Router)
 
@@ -35,6 +36,10 @@ export default new Router({
       path: '/newentry',
       name: 'NewEntry',
       component: NewEntry
+    },
+    {
+      path: '*',
+      component: NotFoundComponent
     }
   ]
 })
