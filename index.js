@@ -1,7 +1,8 @@
 const express = require('express')
+const MongoClient = require('mongodb').MongoClient;
 const app = express();
 
-const config = { PORT: 5000, HOSTNAME: '127.0.0.1' }
+const config = { PORT: 5000, HOSTNAME: '127.0.0.1', MONGOURL: 'mongodb://localhost:27017', MONGODB: 'vic-db' }
 
 const waitReception = (req) => {
   return new Promise((resolve, reject) => {
@@ -15,8 +16,6 @@ const waitReception = (req) => {
   })
 }
 
-let users = []
-
 app.use('/', express.static(__dirname + '/dist'));
 app.listen( config.PORT, config.HOSTNAME, () => {
   console.log( "Listening at http://%s:%s", config.HOSTNAME, config.PORT );
@@ -25,24 +24,46 @@ app.listen( config.PORT, config.HOSTNAME, () => {
 // USERS
 app.get('/getUser/:pseudo', (request, response, next) => {
   console.log("GET %s", request.params.pseudo);
-  let i = users.indexOf(request.params.pseudo);
-  if (i > -1) {
-    response.send(users[i])
-  } else {
-    response.status(404).send("Not Found: " + request.params.pseudo)
-  }
+  MongoClient.connect(config.MONGOURL)
+    .then(client => {
+      client.db(config.MONGODB).collection('users')
+        .findOne({'name': request.params.pseudo})
+        .then(data => {
+          data ? response.send(data) : response.status(404).send("Not Found: " + request.params.pseudo)
+        })
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 app.get('/listUsers', (request, response, next) => {
-  return users;
+  MongoClient.connect(config.MONGOURL)
+    .then(client => {
+      client.db(config.MONGODB).collection('users')
+        .find()
+        .toArray()
+        .then(data => {
+          data ? response.send(data) : response.send({})
+        })
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 app.post('/addUser', (request, response, next) => {
   waitReception(request)
     .then(bodyStr => {
       console.log('POST %s', bodyStr);
-      users.push(bodyStr)
-      response.status(200).send({ name: bodyStr })
+      MongoClient.connect(config.MONGOURL)
+        .then(client => {
+          let insertedId = client.db(config.MONGODB).collection('users').insert({name: bodyStr}).insertedId;
+            response.status(200).send({ _id: insertedId, name: bodyStr })
+        })
+        .catch(err => {
+          console.log(err);
+        });
     })
     .catch(err => {
       console.log(err);
