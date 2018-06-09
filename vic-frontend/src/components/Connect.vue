@@ -36,17 +36,17 @@ export default {
   methods: {
     connect: function () {
       this.checkingPseudo = true
-      axios.get("http://localhost:5000/getUser/" + this.name)
-      .then( res => {
-        this.checkingPseudo = false
-        this.$store.commit('connect', res.data )
-        this.$router.push('/overview')
-      })
-      .catch( err => {
-        console.log(err)
-        this.checkingPseudo = false
-        this.pseudoDoesntExist = true
-      })
+      axios.get('http://localhost:5000/getUser/' + this.name)
+        .then(res => {
+          this.checkingPseudo = false
+          this.$store.commit('connect', res.data)
+          this.$router.push('/overview')
+        })
+        .catch(err => {
+          console.log(err)
+          this.checkingPseudo = false
+          this.pseudoDoesntExist = true
+        })
     }
   }
 }

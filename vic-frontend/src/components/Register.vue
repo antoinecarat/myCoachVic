@@ -31,23 +31,25 @@ export default {
       name: '',
       pseudoAlreadyExists: false,
       checkingPseudo: false
-   }
+    }
   },
   methods: {
     register: function () {
       this.checkingPseudo = true
-      axios.get("http://localhost:5000/getUser/" + this.name)
-      .then( res => {
-        this.checkingPseudo = false
-        this.pseudoAlreadyExists = true
-      })
-      .catch( err => {
-        console.log(err)
-        this.checkingPseudo = false
-        //call /addUser to have a proper user
-        this.$store.commit('connect', { name: this.name} )
-        this.$router.push('/overview')
-      })
+      axios.get('http://localhost:5000/getUser/' + this.name)
+        .then(res => {
+          this.checkingPseudo = false
+          this.pseudoAlreadyExists = true
+        })
+        .catch(err => {
+          console.log(err)
+          this.checkingPseudo = false
+          axios.post('http://localhost:5000/addUser', this.name)
+            .then(res => {
+              this.$store.commit('connect', res.data)
+              this.$router.push('/overview')
+            })
+        })
     }
   }
 }
