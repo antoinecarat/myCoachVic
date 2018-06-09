@@ -38,6 +38,11 @@ export default new Router({
       component: NewEntry
     },
     {
+      path: '/newsport',
+      name: 'NewSport',
+      component: NewSport
+    },
+    {
       path: '*',
       component: NotFoundComponent
     }
