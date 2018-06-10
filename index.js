@@ -1,5 +1,6 @@
-const express = require('express')
 const MongoClient = require('mongodb').MongoClient;
+const express = require('express')
+const cors = require('cors');
 const app = express();
 
 const config = { PORT: 5000, HOSTNAME: '127.0.0.1', MONGOURL: 'mongodb://localhost:27017', MONGODB: 'vic-db' }
@@ -16,6 +17,7 @@ const waitReception = (req) => {
   })
 }
 
+app.use(cors());
 app.use('/', express.static(__dirname + '/dist'));
 app.listen( config.PORT, config.HOSTNAME, () => {
   console.log( "Listening at http://%s:%s", config.HOSTNAME, config.PORT );
@@ -58,8 +60,12 @@ app.post('/addUser', (request, response, next) => {
       console.log('POST %s', bodyStr);
       MongoClient.connect(config.MONGOURL)
         .then(client => {
-          let insertedId = client.db(config.MONGODB).collection('users').insert({name: bodyStr}).insertedId;
-            response.status(200).send({ _id: insertedId, name: bodyStr })
+          client.db(config.MONGODB).collection('users').insert({name: bodyStr});
+          client.db(config.MONGODB).collection('users')
+            .findOne({'name': bodyStr})
+            .then(data => {
+              data ? response.send(data) : response.status(404).send("Not Found: " + request.params.pseudo)
+            })
         })
         .catch(err => {
           console.log(err);

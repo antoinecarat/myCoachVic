@@ -5,6 +5,7 @@ import Overview from '@/components/Overview'
 import Connect from '@/components/Connect'
 import Register from '@/components/Register'
 import NewEntry from '@/components/NewEntry'
+import NewSport from '@/components/NewSport'
 import NotFoundComponent from '@/components/NotFoundComponent'
 
 Vue.use(Router)
