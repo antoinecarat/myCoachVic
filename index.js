@@ -31,7 +31,12 @@ app.get('/getUser/:pseudo', (request, response, next) => {
       client.db(config.MONGODB).collection('users')
         .findOne({'name': request.params.pseudo})
         .then(data => {
-          data ? response.send(data) : response.status(404).send("Not Found: " + request.params.pseudo)
+          if (data) {
+            let {_id, ...user} = data
+            response.send(user)
+          } else {
+            response.status(404).send("Not Found: " + request.params.pseudo)
+          }
         })
     })
     .catch(err => {
@@ -46,7 +51,15 @@ app.get('/listUsers', (request, response, next) => {
         .find()
         .toArray()
         .then(data => {
-          data ? response.send(data) : response.send({})
+          if (!data) {
+            response.send([])
+          } else {
+            let users = data.map(item => {
+              let {_id, ...user} = item
+              return user
+            })
+            response.send(users)
+          }
         })
     })
     .catch(err => {
@@ -64,7 +77,12 @@ app.post('/addUser', (request, response, next) => {
           client.db(config.MONGODB).collection('users')
             .findOne({'name': bodyStr})
             .then(data => {
-              data ? response.send(data) : response.status(404).send("Not Found: " + request.params.pseudo)
+              if (data) {
+                let {_id, ...user} = data
+                response.send(user)
+              } else {
+                response.status(404).send("Error while adding: " + bodyStr)
+              }
             })
         })
         .catch(err => {
