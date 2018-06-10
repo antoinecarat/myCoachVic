@@ -44,9 +44,9 @@ export default {
         .catch(err => {
           console.log(err)
           this.checkingPseudo = false
-          axios.post('http://localhost:5000/addUser', this.name)
+          axios.post('http://localhost:5000/addUser', {name: this.name})
             .then(res => {
-              this.$store.commit('connect', res.data)
+              this.$store.commit('connect', JSON.parse(res.data))
               this.$router.push('/overview')
             })
         })

@@ -73,15 +73,16 @@ app.post('/addUser', (request, response, next) => {
       console.log('POST %s', bodyStr);
       MongoClient.connect(config.MONGOURL)
         .then(client => {
-          client.db(config.MONGODB).collection('users').insert({name: bodyStr});
+          let newuser = JSON.parse(bodyStr)
+          client.db(config.MONGODB).collection('users').insert(newuser);
           client.db(config.MONGODB).collection('users')
-            .findOne({'name': bodyStr})
+            .findOne({'name': newuser.name})
             .then(data => {
               if (data) {
                 let {_id, ...user} = data
                 response.send(user)
               } else {
-                response.status(404).send("Error while adding: " + bodyStr)
+                response.status(404).send("Error while adding: " + newuser.name)
               }
             })
         })
