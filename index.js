@@ -25,7 +25,7 @@ app.listen( config.PORT, config.HOSTNAME, () => {
 
 // USERS
 app.get('/getUser/:pseudo', (request, response, next) => {
-  console.log("GET %s", request.params.pseudo);
+  console.log("GET user:%s", request.params.pseudo);
   MongoClient.connect(config.MONGOURL)
     .then(client => {
       client.db(config.MONGODB).collection('users')
@@ -35,7 +35,7 @@ app.get('/getUser/:pseudo', (request, response, next) => {
             let {_id, ...user} = data
             response.send(user)
           } else {
-            response.status(404).send("Not Found: " + request.params.pseudo)
+            response.status(404).send("User Not Found: " + request.params.pseudo)
           }
         })
     })
@@ -45,6 +45,7 @@ app.get('/getUser/:pseudo', (request, response, next) => {
 });
 
 app.get('/listUsers', (request, response, next) => {
+  console.log("LIST users");
   MongoClient.connect(config.MONGOURL)
     .then(client => {
       client.db(config.MONGODB).collection('users')
@@ -70,7 +71,7 @@ app.get('/listUsers', (request, response, next) => {
 app.post('/addUser', (request, response, next) => {
   waitReception(request)
     .then(bodyStr => {
-      console.log('POST %s', bodyStr);
+      console.log('POST user:%s', bodyStr);
       MongoClient.connect(config.MONGOURL)
         .then(client => {
           let newuser = JSON.parse(bodyStr)
@@ -82,7 +83,7 @@ app.post('/addUser', (request, response, next) => {
                 let {_id, ...user} = data
                 response.send(user)
               } else {
-                response.status(404).send("Error while adding: " + newuser.name)
+                response.status(404).send("Error while adding user: " + newuser.name)
               }
             })
         })
@@ -96,15 +97,57 @@ app.post('/addUser', (request, response, next) => {
 });
 
 // ENTRIES
-app.get('/listEntries', (request, response, next) => {
-  return [
-    { date: '05/06/2018', sport: 'cycling', duration: 84, tiredness: 6, stats: { distance: 57 } },
-    { date: '03/06/2018', sport: 'rugby', duration: 90, tiredness: 8, stats: { tackles: 83, tries: 5 } }
-  ]
+app.get('/listEntries/:pseudo', (request, response, next) => {
+  console.log("LIST entries:%s", request.params.pseudo);
+  MongoClient.connect(config.MONGOURL)
+    .then(client => {
+      client.db(config.MONGODB).collection('entries')
+        .find({'user': request.params.pseudo})
+        .toArray()
+        .then(data => {
+                if (!data) {
+                  response.send([])
+                } else {
+                  let entries = data.map(item => {
+                    let {_id, ...entry} = item
+                    return entry
+                  })
+                  response.send(entries)
+                }
+        })
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 app.post('/addEntry', (request, response, next) => {
-  // Add entry to db
+  waitReception(request)
+    .then(bodyStr => {
+      console.log('POST entry:%s', bodyStr);
+      MongoClient.connect(config.MONGOURL)
+        .then(client => {
+          let newentry = JSON.parse(bodyStr)
+          client.db(config.MONGODB).collection('entries').insert(newentry);
+          client.db(config.MONGODB).collection('entries')
+            .findOne({'name': newentry.name, 'user': newentry.user})
+            .then(data => {
+              if (data) {
+                console.log(data);
+                let {_id, ...entry} = data
+                response.send(entry)
+              } else {
+                response.status(404).send("Error while adding entry: " + newentry.name)
+              }
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    })
+    .catch(err => {
+      console.log(err);
+    });
 });
 
 // htaccess-like rewritting

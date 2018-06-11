@@ -46,7 +46,8 @@ export default {
           this.checkingPseudo = false
           axios.post('http://localhost:5000/addUser', {name: this.name})
             .then(res => {
-              this.$store.commit('connect', JSON.parse(res.data))
+              console.log(res.data)
+              this.$store.commit('connect', res.data)
               this.$router.push('/overview')
             })
         })

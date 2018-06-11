@@ -18,21 +18,26 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'NewEntry',
   methods: {
     addEntry: function () {
-      // Add entry to db and store
-      this.$router.push('/overview')
-      this.$snackbar.open({
-        message: 'Entry has been added',
-        type: 'is-link',
-        position: 'is-top',
-        actionText: 'New one',
-        onAction: () => {
-          this.$router.push('/newentry')
-        }
-      })
+      axios.post('http://localhost:5000/addEntry', {name: 'pouet', user: this.$store.state.user.name})
+        .then(res => {
+          console.log(res.data)
+          this.$router.push('/overview')
+          this.$snackbar.open({
+            message: 'Entry has been added',
+            type: 'is-link',
+            position: 'is-top',
+            actionText: 'New one',
+            onAction: () => {
+              this.$router.push('/newentry')
+            }
+          })
+        })
     }
   }
 }
