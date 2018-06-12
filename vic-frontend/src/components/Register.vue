@@ -94,7 +94,7 @@ export default {
         .catch(err => {
           console.log(err)
           this.checkingPseudo = false
-          axios.post('http://localhost:5000/addUser', {name: this.name})
+          axios.post('http://localhost:5000/addUser', {name: this.name, age: this.age, size: this.size, weight: this.weight, sports: this.selectedSports})
             .then(res => {
               console.log(res.data)
               this.$store.commit('connect', res.data)

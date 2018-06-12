@@ -43,7 +43,9 @@ export default {
       name: '',
       pwd: '',
       pseudoDoesntExist: false,
-      checkingPseudo: false
+      checkingPseudo: false,
+      wrongPwd: false,
+      checkingPwd: false
     }
   },
   methods: {
@@ -52,6 +54,7 @@ export default {
       axios.get('http://localhost:5000/getUser/' + this.name)
         .then(res => {
           this.checkingPseudo = false
+          // Check pwd
           this.$store.commit('connect', res.data)
           this.$router.push('/overview')
         })
