@@ -5,7 +5,9 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    user: null
+    user: null,
+    entries: [],
+    sports: []
   },
   mutations: {
     connect (state, user) {
