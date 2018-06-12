@@ -10,14 +10,57 @@
         </h2>
       </div>
     </div>
-    <div class="form">
-      <input type="text" class="input" :class="{'is-danger': pseudoAlreadyExists, 'is-loading': checkingPseudo}" v-model="name"/>
-      <p class="help is-danger" v-if="pseudoAlreadyExists">This username is already used: <a @click="$router.push('/connect')">Connect</a></p>
+    <div class="column">
+      <div class="field">
+        <label class="label">Username</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="jdoe" :class="{'is-danger': pseudoAlreadyExists, 'is-loading': checkingPseudo}" v-model="name"/>
+        </div>
+        <p class="help is-danger" v-if="pseudoAlreadyExists">This username is already used: <a @click="$router.push('/connect')">Connect</a></p>
+      </div>
+      <div class="field">
+        <label class="label">Age</label>
+        <div class="control">
+          <input class="input" type="number" min=18 max=90 v-model="age"/>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Size (cm)</label>
+        <div class="control">
+          <input class="input" type="number" min=100 max=220 v-model="size"/>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Weight (kg)</label>
+        <div class="control">
+          <input class="input" type="number" min=40 max=150 v-model="weight"/>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+          <input class="input" type="password" placeholder="••••••••••" :class="{'is-danger': !pwdMatch, 'is-success': pwdMatch}" v-model="pwd"/>
+        </div>
+        <p class="help is-danger" v-if="!pwdMatch">Passwords don't match.</p>
+      </div>
+      <div class="field">
+        <label class="label">Confirm password</label>
+        <div class="control">
+          <input class="input" type="password" placeholder="••••••••••" :class="{'is-danger': !pwdMatch, 'is-success': pwdMatch}" v-model="pwd2"/>
+        </div>
+        <p class="help is-danger" v-if="!pwdMatch">Passwords don't match.</p>
+      </div>
+      <div class="block">
+        <label class="label">Sports</label>
+        <b-checkbox v-model="selectedSports" v-for="sport in availableSports" :key="sport.name" :native-value="sport.name">
+          {{sport.name}}
+        </b-checkbox>
+      </div>
       <div class="is-grouped">
         <button class="button" @click="register()">Register</button>
         <button class="button is-text" @click="$router.go(-1)">Cancel</button>
       </div>
-  </div>
+    </div>
   </section>
 </template>
 
@@ -29,6 +72,13 @@ export default {
   data: () => {
     return {
       name: '',
+      age: 22,
+      size: 170,
+      weight: 65,
+      pwd: '',
+      pwd2: '',
+      availableSports: [],
+      selectedSports: [],
       pseudoAlreadyExists: false,
       checkingPseudo: false
     }
@@ -52,6 +102,21 @@ export default {
             })
         })
     }
+  },
+  computed: {
+    pwdMatch: function () {
+      return this.pwd2 !== '' && this.pwd === this.pwd2
+    }
+  },
+  mounted: function () {
+    /* axios.get('http://localhost:5000/listSports/')
+      .then(res => {
+        this.availableSports = res.data
+      })
+      .catch(err => {
+        console.log(err);
+      }) */
+    this.availableSports = [{name: 'Rugby'}, {name: 'Cycling'}, {name: 'Bouldering'}, {name: 'Handball'}]
   }
 }
 </script>
