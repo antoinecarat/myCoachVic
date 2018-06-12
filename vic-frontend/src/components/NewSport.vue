@@ -21,7 +21,7 @@
 export default {
   name: 'NewSport',
   methods: {
-    addEntry: function () {
+    addSport: function () {
       // Add entry to db and store
       this.$router.push('/overview')
       this.$snackbar.open({

@@ -10,9 +10,21 @@
         </h2>
       </div>
     </div>
-    <div class="form">
-      <input type="text" class="input" :class="{'is-danger': pseudoDoesntExist, 'is-loading': checkingPseudo}" v-model="name"/>
-      <p class="help is-danger" v-if="pseudoDoesntExist">This username doesn't exist: <a @click="$router.push('/register')">Register</a></p>
+    <div class="column">
+      <div class="field">
+        <label class="label">Username</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="jdoe" :class="{'is-danger': pseudoDoesntExist, 'is-loading': checkingPseudo}" v-model="name"/>
+        </div>
+        <p class="help is-danger" v-if="pseudoDoesntExist">This username doesn't exist: <a @click="$router.push('/register')">Register</a></p>
+      </div>
+      <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+          <input class="input" type="password" placeholder="••••••••••" :class="{'is-danger': wrongPwd, 'is-loading': checkingPwd}" v-model="pwd"/>
+        </div>
+        <p class="help is-danger" v-if="wrongPwd">Wrong password: <a @click="$router.push('/register')">Reset</a></p>
+      </div>
       <div class="is-grouped">
         <button class="button" @click="connect()">Connect</button>
         <button class="button is-text" @click="$router.go(-1)">Cancel</button>
@@ -29,6 +41,7 @@ export default {
   data: () => {
     return {
       name: '',
+      pwd: '',
       pseudoDoesntExist: false,
       checkingPseudo: false
     }

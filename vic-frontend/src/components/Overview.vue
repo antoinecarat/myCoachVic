@@ -66,7 +66,7 @@
         </div>
       </div>
 
-      <footer class="footer"> <a @click="newEntry()">Add a new entry</a> - <a @click="logout()">Log out</a> </footer>
+      <footer class="footer"> <a @click="newEntry()">Add a new entry</a> - <a @click="newSport()">Add a new sport</a> - <a @click="logout()">Log out</a> </footer>
   </section>
 </template>
 
@@ -80,6 +80,9 @@ export default {
     },
     newEntry: function () {
       this.$router.push('/newentry')
+    },
+    newSport: function () {
+      this.$router.push('/newsport')
     }
   }
 }
