@@ -150,6 +150,60 @@ app.post('/addEntry', (request, response, next) => {
     });
 });
 
+// SPORTS
+app.get('/listSports', (request, response, next) => {
+  console.log("LIST sports");
+  MongoClient.connect(config.MONGOURL)
+    .then(client => {
+      client.db(config.MONGODB).collection('sports')
+        .find()
+        .toArray()
+        .then(data => {
+                if (!data) {
+                  response.send([])
+                } else {
+                  let sports = data.map(item => {
+                    let {_id, ...sport} = item
+                    return sport
+                  })
+                  response.send(sports)
+                }
+        })
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+app.post('/addSport', (request, response, next) => {
+  waitReception(request)
+    .then(bodyStr => {
+      console.log('POST sport:%s', bodyStr);
+      MongoClient.connect(config.MONGOURL)
+        .then(client => {
+          let newsport = JSON.parse(bodyStr)
+          client.db(config.MONGODB).collection('sports').insert(newsport);
+          client.db(config.MONGODB).collection('sports')
+            .findOne({'name': newsport.name})
+            .then(data => {
+              if (data) {
+                console.log(data);
+                let {_id, ...sport} = data
+                response.send(sport)
+              } else {
+                response.status(404).send("Error while adding sport: " + newsport.name)
+              }
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
 // htaccess-like rewritting
 app.get('*', (request, response, next) => {
   response.sendFile(__dirname + '/dist/index.html');
