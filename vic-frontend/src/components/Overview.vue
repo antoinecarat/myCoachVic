@@ -14,7 +14,7 @@
       <div class="tile is-ancestor">
         <div class="tile is-parent">
           <div class="tile is-child notification is-light">
-            <p class="title"> 0 </p>
+            <p class="title"> {{this.$store.state.entries.length}} </p>
             <div class="content">
               Sessions
             </div>
@@ -28,7 +28,7 @@
           <div class="tile is-child notification is-light">
             <p class="title"> 0 </p>
             <div class="content">
-              Average duration of your session
+              Average duration of your session (hours)
             </div>
           </div>
         </div>
@@ -71,6 +71,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'Overview',
   methods: {
@@ -84,6 +86,15 @@ export default {
     newSport: function () {
       this.$router.push('/newsport')
     }
+  },
+  mounted: function () {
+    axios.get('http://localhost:5000/listSports')
+      .then(res => {
+        this.$store.commit('setSports', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>
