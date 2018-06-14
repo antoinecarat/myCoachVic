@@ -14,7 +14,7 @@
       <div class="tile is-ancestor">
         <div class="tile is-parent">
           <div class="tile is-child notification is-light">
-            <p class="title"> {{this.$store.state.entries.length}} </p>
+            <p class="title"> {{this.$store.state.user.entries.length}} </p>
             <div class="content">
               Sessions
             </div>
@@ -98,6 +98,13 @@ export default {
     axios.get('http://localhost:5000/listEntries/' + this.$store.state.user.name)
       .then(res => {
         this.$store.commit('setUserEntries', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
+    axios.get('http://localhost:5000/listSports/' + this.$store.state.user.name)
+      .then(res => {
+        this.$store.commit('setUserSports', res.data)
       })
       .catch(err => {
         console.log(err)
