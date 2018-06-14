@@ -95,6 +95,13 @@ export default {
       .catch(err => {
         console.log(err)
       })
+    axios.get('http://localhost:5000/listEntries/' + this.$store.state.user.name)
+      .then(res => {
+        this.$store.commit('setUserEntries', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>
