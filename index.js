@@ -175,6 +175,38 @@ app.get('/listSports', (request, response, next) => {
     });
 });
 
+app.get('/listSports/:pseudo', (request, response, next) => {
+  console.log("LIST sports: %s", request.params.pseudo);
+  MongoClient.connect(config.MONGOURL)
+    .then(client => {
+      client.db(config.MONGODB).collection('usersports')
+        .find({'user': request.params.pseudo})
+        .toArray()
+        .then(data => {
+          if (!data) {
+            response.send([])
+          } else {
+            let sports = data.map(item => {
+              let sportObject = {}
+              let {_id, user, sport} = item
+              return client.db(config.MONGODB).collection('sports').findOne({'name': sport})
+            })
+            Promise.all(sports)
+              .then(values => {
+                let usersports = values.map(item => {
+                  let {_id, ...usersport} = item
+                  return usersport
+                })
+                response.send(usersports)
+              })
+          }
+        })
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
 app.post('/addSport', (request, response, next) => {
   waitReception(request)
     .then(bodyStr => {
@@ -192,6 +224,35 @@ app.post('/addSport', (request, response, next) => {
                 response.send(sport)
               } else {
                 response.status(404).send("Error while adding sport: " + newsport.name)
+              }
+            })
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    })
+    .catch(err => {
+      console.log(err);
+    });
+});
+
+app.post('/addUserSport', (request, response, next) => {
+  waitReception(request)
+    .then(bodyStr => {
+      console.log('POST userSport:%s', bodyStr);
+      MongoClient.connect(config.MONGOURL)
+        .then(client => {
+          let newusersport = JSON.parse(bodyStr)
+          client.db(config.MONGODB).collection('usersports').insert({user: newusersport.user, sport: newusersport.sport});
+          client.db(config.MONGODB).collection('usersports')
+            .findOne({'user': newusersport.user, 'sport': newusersport.sport})
+            .then(data => {
+              if (data) {
+                console.log(data);
+                let {_id, ...mapping} = data
+                response.send(mapping)
+              } else {
+                response.status(404).send("Error while adding sport: " + newusersport.sport + " to user " + newusersport.user)
               }
             })
         })

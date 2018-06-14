@@ -6,7 +6,6 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     user: null,
-    entries: [],
     sports: []
   },
   mutations: {
@@ -15,6 +14,15 @@ export default new Vuex.Store({
     },
     disconnect (state) {
       state.user = null
+    },
+    setSports (state, sports) {
+      state.sports = sports
+    },
+    setUserEntries (state, entries) {
+      state.user.entries = entries
+    },
+    setUserSports (state, sports) {
+      state.user.sports = sports
     }
   }
 })

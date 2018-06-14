@@ -14,7 +14,7 @@
       <div class="tile is-ancestor">
         <div class="tile is-parent">
           <div class="tile is-child notification is-light">
-            <p class="title"> {{this.$store.state.user.entries.length}} </p>
+            <p class="title"> 0 </p>
             <div class="content">
               Sessions
             </div>
