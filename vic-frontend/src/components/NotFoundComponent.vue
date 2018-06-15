@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="is-grouped">
-        <button class="button" @click="$router.push('/')">Home</button>
+        <button class="button" @click="$router.push('/overview')">Home</button>
       </div>
   </section>
 </template>
@@ -19,7 +19,7 @@
 <script>
 
 export default {
-  name: 'HelloWorld'
+  name: 'NotFoundComponent'
 }
 </script>
 
