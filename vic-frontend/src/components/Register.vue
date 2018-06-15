@@ -52,7 +52,7 @@
       </div>
       <div class="block">
         <label class="label">Sports</label>
-        <b-checkbox v-model="selectedSports" v-for="sport in availableSports" :key="sport.name" :native-value="sport.name">
+        <b-checkbox v-model="selectedSports" v-for="sport in this.$store.state.sports" :key="sport.name" :native-value="sport.name">
           {{sport.name}}
         </b-checkbox>
       </div>
@@ -77,7 +77,6 @@ export default {
       weight: 65,
       pwd: '',
       pwd2: '',
-      availableSports: [],
       selectedSports: [],
       pseudoAlreadyExists: false,
       checkingPseudo: false
@@ -94,11 +93,22 @@ export default {
         .catch(err => {
           console.log(err)
           this.checkingPseudo = false
-          axios.post('http://localhost:5000/addUser', {name: this.name, age: this.age, size: this.size, weight: this.weight, sports: this.selectedSports})
+          axios.post('http://localhost:5000/addUser', {name: this.name, age: this.age, size: this.size, weight: this.weight})
             .then(res => {
               console.log(res.data)
-              this.$store.commit('connect', res.data)
-              this.$router.push('/overview')
+              let sports = this.selectedSports.map(sport => {
+                return axios.post('http://localhost:5000/addUserSport', {user: this.name, sport: sport})
+              })
+              Promise.all(sports)
+                .then(values => {
+                  let sports = values.map(item => {
+                    let {_id, user, sport} = item
+                    return sport
+                  })
+                  this.$store.commit('connect', res.data)
+                  this.$store.commit('setUserSports', sports)
+                  this.$router.push('/overview')
+                })
             })
         })
     }
@@ -109,14 +119,7 @@ export default {
     }
   },
   mounted: function () {
-    /* axios.get('http://localhost:5000/listSports/')
-      .then(res => {
-        this.availableSports = res.data
-      })
-      .catch(err => {
-        console.log(err);
-      }) */
-    this.availableSports = [{name: 'Rugby'}, {name: 'Cycling'}, {name: 'Bouldering'}, {name: 'Handball'}]
+
   }
 }
 </script>
