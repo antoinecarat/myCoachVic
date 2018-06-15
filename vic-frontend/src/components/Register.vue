@@ -58,7 +58,7 @@
       </div>
       <div class="is-grouped">
         <button class="button" @click="register()">Register</button>
-        <button class="button is-text" @click="$router.go(-1)">Cancel</button>
+        <button class="button is-text" @click="$router.push('/')">Cancel</button>
       </div>
     </div>
   </section>

@@ -12,7 +12,7 @@
     </div>
     <div class="is-grouped">
       <button class="button" @click="addEntry()">Add</button>
-      <button class="button is-text" @click="$router.go(-1)">Cancel</button>
+      <button class="button is-text" @click="$router.push('/overview')">Cancel</button>
     </div>
   </section>
 </template>
@@ -42,15 +42,11 @@ export default {
     }
   },
   beforeRouteLeave(to, from, next){
-    this.$snackbar.open({
-      message: 'New entry\'s information will be lost',
-      type: 'is-link',
-      position: 'is-top',
-      actionText: 'Leave anyway',
-      onAction: () => {
-        next()
-      }
-    })
+    if (confirm("New entry's information will be lost")) {
+      next()
+    } else {
+      next(false)
+    }
   }
 }
 </script>
