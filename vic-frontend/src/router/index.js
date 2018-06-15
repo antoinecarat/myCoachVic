@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import store from '../store'
 import HelloWorld from '@/components/HelloWorld'
 import Overview from '@/components/Overview'
 import Connect from '@/components/Connect'
@@ -19,11 +20,6 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/overview',
-      name: 'Overview',
-      component: Overview
-    },
-    {
       path: '/connect',
       name: 'Connect',
       component: Connect
@@ -34,14 +30,28 @@ export default new Router({
       component: Register
     },
     {
+      path: '/overview',
+      name: 'Overview',
+      component: Overview,
+      beforeEnter: (to, from, next) => {
+        store.state.user ? next() : next('/')
+      }
+    },
+    {
       path: '/newentry',
       name: 'NewEntry',
-      component: NewEntry
+      component: NewEntry,
+      beforeEnter: (to, from, next) => {
+        store.state.user ? next() : next('/')
+      }
     },
     {
       path: '/newsport',
       name: 'NewSport',
-      component: NewSport
+      component: NewSport,
+      beforeEnter: (to, from, next) => {
+        store.state.user ? next() : next('/')
+      }
     },
     {
       path: '*',

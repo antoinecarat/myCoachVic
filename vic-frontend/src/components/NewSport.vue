@@ -148,6 +148,17 @@ export default {
       .catch(err => {
         console.log(err)
       })
+  },
+  beforeRouteLeave(to, from, next){
+    this.$snackbar.open({
+      message: 'New sport\'s information will be lost',
+      type: 'is-link',
+      position: 'is-top',
+      actionText: 'Leave anyway',
+      onAction: () => {
+        next()
+      }
+    })
   }
 }
 </script>

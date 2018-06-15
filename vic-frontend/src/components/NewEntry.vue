@@ -24,7 +24,8 @@ export default {
   name: 'NewEntry',
   methods: {
     addEntry: function () {
-      axios.post('http://localhost:5000/addEntry', {name: 'pouet', user: this.$store.state.user.name})
+      let newentry = {name: 'pouet', user: this.$store.state.user.name}
+      axios.post('http://localhost:5000/addEntry', newentry)
         .then(res => {
           console.log(res.data)
           this.$router.push('/overview')
@@ -39,6 +40,17 @@ export default {
           })
         })
     }
+  },
+  beforeRouteLeave(to, from, next){
+    this.$snackbar.open({
+      message: 'New entry\'s information will be lost',
+      type: 'is-link',
+      position: 'is-top',
+      actionText: 'Leave anyway',
+      onAction: () => {
+        next()
+      }
+    })
   }
 }
 </script>
