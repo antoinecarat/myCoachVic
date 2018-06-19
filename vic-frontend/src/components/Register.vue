@@ -119,7 +119,13 @@ export default {
     }
   },
   mounted: function () {
-
+    axios.get('http://localhost:5000/listSports')
+      .then(res => {
+        this.$store.commit('setSports', res.data)
+      })
+      .catch(err => {
+        console.log(err)
+      })
   }
 }
 </script>
