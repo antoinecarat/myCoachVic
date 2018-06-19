@@ -60,10 +60,16 @@
               <input class="input" type="text" placeholder="name" v-model="metric"/>
             </div>
           </div>
+          <div class="field">
+            <label class="label">unit</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="name" v-model="unit"/>
+            </div>
+          </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button">Add</button>
-          <button class="button is-text">Cancel</button>
+          <button class="button" @click="addMetric()">Add</button>
+          <button class="button is-text" @click="cleanModal()">Cancel</button>
         </footer>
       </div>
     </div>
@@ -98,6 +104,15 @@ export default {
         this.name = ''
         this.metrics = []
       }
+    },
+    addMetric: function () {
+      this.metrics.push({name: this.metric, unit: this.unit});
+      this.cleanModal()
+    },
+    cleanModal: function () {
+      this.metric = ''
+      this.unit = ''
+      this.showModal = false
     },
     addSport: function () {
       let newsport = {name: this.name, metrics: this.metrics}
