@@ -102,7 +102,7 @@ export default {
               Promise.all(sports)
                 .then(values => {
                   let sports = values.map(item => {
-                    let {_id, user, sport} = item
+                    let {sport, ...rest} = item
                     return sport
                   })
                   this.$store.commit('connect', res.data)

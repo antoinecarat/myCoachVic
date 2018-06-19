@@ -55,8 +55,12 @@ export default {
         .then(res => {
           this.checkingPseudo = false
           // Check pwd
+          axios.get('http://localhost:5000/listSports/acarat' + this.name)
+            .then(response => {
+              this.$store.commit('setUserSports', response.data)
+              this.$router.push('/overview')
+            })
           this.$store.commit('connect', res.data)
-          this.$router.push('/overview')
         })
         .catch(err => {
           console.log(err)

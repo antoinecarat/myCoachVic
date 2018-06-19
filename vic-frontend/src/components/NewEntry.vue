@@ -41,7 +41,7 @@ export default {
         })
     }
   },
-  beforeRouteLeave(to, from, next){
+  beforeRouteLeave (to, from, next) {
     if (confirm("New entry's information will be lost")) {
       next()
     } else {
