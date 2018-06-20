@@ -41,8 +41,8 @@
         <button class="button is-text" @click="showModal=!showModal" v-if="!existingSportSelected">Add new metric</button>
       </div>
       <div class="is-grouped">
-        <button class="button" @click="addSport()">Add</button>
-        <button class="button is-text" @click="$router.push('/overview')">Cancel</button>
+        <button class="button" @click="addSport()" :disabled="this.name === '' || this.metrics === []">Add to your sports</button>
+        <button class="button is-text" @click="quitSportTab()">Cancel</button>
       </div>
     </div>
 
@@ -68,7 +68,7 @@
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button" @click="addMetric()">Add to your sports</button>
+          <button class="button" @click="addMetric()" :disabled="this.metric === '' || this.unit === ''">Add metric</button>
           <button class="button is-text" @click="cleanModal()">Cancel</button>
         </footer>
       </div>
@@ -113,6 +113,10 @@ export default {
       this.metric = ''
       this.unit = ''
       this.showModal = false
+    },
+    quitSportTab: function () {
+      this.exitedByCancel = true
+      this.$router.push('/overview')
     },
     addSport: function () {
       let newsport = {name: this.name, metrics: this.metrics}
@@ -165,9 +169,15 @@ export default {
       })
   },
   beforeRouteLeave (to, from, next) {
-    if (confirm("New sport's information will be lost")) {
-      next()
+    if (this.exitedByCancel && (this.name === '' || this.metrics === [])) {
+      if (confirm("New sport's information will be lost")) {
+        next()
+      } else {
+        this.exitedByCancel = false
+        next(false)
+      }
     } else {
+      this.exitedByCancel = false
       next(false)
     }
   }

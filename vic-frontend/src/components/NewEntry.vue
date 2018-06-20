@@ -12,7 +12,7 @@
     </div>
     <div class="is-grouped">
       <button class="button" @click="addEntry()">Add</button>
-      <button class="button is-text" @click="$router.push('/overview')">Cancel</button>
+      <button class="button is-text" @click="quitEntryTab()">Cancel</button>
     </div>
   </section>
 </template>
@@ -22,7 +22,16 @@ import axios from 'axios'
 
 export default {
   name: 'NewEntry',
+  data: function () {
+    return {
+      exitedByCancel: false
+    }
+  },
   methods: {
+    quitEntryTab: function () {
+      this.exitedByCancel = true
+      $router.push('/overview')
+    },
     addEntry: function () {
       let newentry = {name: 'pouet', user: this.$store.state.user.name}
       axios.post('http://localhost:5000/addEntry', newentry)
@@ -42,9 +51,15 @@ export default {
     }
   },
   beforeRouteLeave (to, from, next) {
-    if (confirm("New entry's information will be lost")) {
-      next()
+    if (this.exitedByCancel && true) {
+      if (confirm("New entry's information will be lost")) {
+        next()
+      } else {
+        this.exitedByCancel = false
+        next(false)
+      }
     } else {
+      this.exitedByCancel = false
       next(false)
     }
   }
