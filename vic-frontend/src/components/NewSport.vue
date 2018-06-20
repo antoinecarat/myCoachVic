@@ -38,7 +38,7 @@
             {{metric.name}} ({{metric.unit}})
           </li>
         </ul>
-        <button class="button is-text" @click="showModal=!showModal">Add new metric</button>
+        <button class="button is-text" @click="showModal=!showModal" v-if="!existingSportSelected">Add new metric</button>
       </div>
       <div class="is-grouped">
         <button class="button" @click="addSport()">Add</button>
@@ -68,7 +68,7 @@
           </div>
         </section>
         <footer class="modal-card-foot">
-          <button class="button" @click="addMetric()">Add</button>
+          <button class="button" @click="addMetric()">Add to your sports</button>
           <button class="button is-text" @click="cleanModal()">Cancel</button>
         </footer>
       </div>
